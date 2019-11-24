@@ -1,0 +1,6 @@
+rootProject.name = 'functionapi-common'
+include 'functionapi-blocks'
+include 'functionapi-tools'
+include 'functionapi-api'
+include 'functionapi-scripting'
+

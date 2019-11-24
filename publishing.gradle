@@ -1,0 +1,64 @@
+if (rootProject.file('private.gradle').exists()) { //Publishing details
+    apply from: rootProject.rootDir.absolutePath+'/private.gradle'
+}
+
+
+task sourcesJar(type: Jar) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+}
+jar{
+    from("fabric.mod.json")
+    from(project.rootProject.rootDir.absolutePath+"/LICENSE")
+}
+
+// configure the maven publication
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+
+            artifacts = [
+                    artifact(tasks.jar),
+                    artifact(tasks.sourcesJar)
+            ]
+        }
+    }
+    /* Supply an ext block in private.gradle like so:
+       ext { mavenSnapshotDir="file:///some_local_directory_path" }
+     * and then just run "./gradlew publish" to save the artifacts to the specified directory, in a way that they can be
+     * served by apache or your favorite httpd and behave like a maven repo. Complete with verification hashes.
+     */
+    repositories {
+        if (rootProject.ext.has("localMavenUrl")) {
+            maven {
+                url = rootProject.ext.localMavenUrl
+            }
+        }
+    }
+}
+
+artifactory {
+    if (project.hasProperty("artifactoryUsername")) {
+        contextUrl = 'http://server.bbkr.space:8081/artifactory/'
+        publish {
+            repository {
+                if (version.contains("SNAPSHOT")) {
+                    repoKey = "libs-snapshot"
+                } else {
+                    repoKey = "libs-release"
+                }
+                username = artifactoryUsername
+                password = artifactoryPassword
+            }
+            defaults {
+                publications('maven')
+
+                publishArtifacts = true
+                publishPom = true
+            }
+        }
+    } else {
+        println "Cannot configure artifactory; please define ext.artifactoryUsername and ext.artifactoryPassword before running artifactoryPublish"
+    }
+}
