@@ -5,7 +5,6 @@ import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
-import io.github.cottonmc.functionapi.api.content.ContentRegistrationContext;
 
 import java.util.Map;
 

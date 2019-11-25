@@ -23,7 +23,7 @@ public class Registration implements BiConsumer<CommandFileSource, CommandDispat
     }
 
     private void accept(Map<String,Object> contentRegistrationContext) {
-        Map<FunctionAPIIdentifier, ContentRegistrationContext.ContentType> elements = (Map<FunctionAPIIdentifier, ContentRegistrationContext.ContentType>) contentRegistrationContext.get("elements");
+        Map<FunctionAPIIdentifier, String> elements = (Map<FunctionAPIIdentifier, String>) contentRegistrationContext.get("elements");
 
         if (elements.isEmpty()) {
             return;

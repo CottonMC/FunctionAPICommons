@@ -3,4 +3,5 @@ include 'functionapi-blocks'
 include 'functionapi-tools'
 include 'functionapi-api'
 include 'functionapi-scripting'
+include 'functionapi-content'
 

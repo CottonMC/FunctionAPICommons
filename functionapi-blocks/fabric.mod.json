@@ -18,6 +18,8 @@
 
   "environment": "*",
   "depends": {
+    "functionapi_common": "*",
+    "functionapi_common_content": "*"
   },
   "custom": { "modmenu:parent": "functionapi_blocks", "modmenu:api": true}
 

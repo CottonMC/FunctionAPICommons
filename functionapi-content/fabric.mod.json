@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "functionapi_common_blocks",
+  "id": "functionapi_common_content",
   "version": "1.0.0-SNAPSHOT",
 
-  "name": "Function API COMMON tools",
-  "description": "Common utilities for tool registration.",
+  "name": "Function API COMMON Content",
+  "description": "Common utilities for content registration",
   "authors": [
     "Frontrider"
   ],
@@ -20,6 +20,6 @@
   "depends": {
     "functionapi_common": "*"
   },
-  "custom": { "modmenu:parent": "functionapi_tools", "modmenu:api": true}
+  "custom": { "modmenu:parent": "functionapi", "modmenu:api": true}
 
 }

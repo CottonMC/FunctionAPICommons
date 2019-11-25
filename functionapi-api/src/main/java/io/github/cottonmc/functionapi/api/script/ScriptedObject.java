@@ -13,5 +13,5 @@ public interface ScriptedObject {
     /**
      * Get the type of this object, eg "block".
      * */
-    String getType();
+    String getEventType();
 }

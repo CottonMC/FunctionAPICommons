@@ -18,6 +18,7 @@
 
   "environment": "*",
   "depends": {
+    "functionapi_common": "*"
   },
   "custom": { "modmenu:parent": "functionapi", "modmenu:api": true}
 

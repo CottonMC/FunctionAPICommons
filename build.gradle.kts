@@ -1,44 +1,54 @@
 plugins {
     java
     idea
-    id("com.jfrog.artifactory") version "4.9.0"
-
+    id("com.jfrog.artifactory") version "4.9.0" apply false
 }
 
 group = "io.github.cottonmc"
-version = "1.0-SNAPSHOT"
+version = "1.0"
 
-repositories {
-    mavenCentral()
-    jcenter()
-    maven {
-        setUrl("https://libraries.minecraft.net")
-    }
-    maven {
-        setUrl("http://server.bbkr.space:8081/artifactory/libs-release")
-    }
-    maven {
-        setUrl("https://libraries.minecraft.net")
-    }
-}
-
-allprojects{
+subprojects{
     apply(plugin="java")
     apply(plugin="maven-publish")
+    apply(plugin="com.jfrog.artifactory")
     apply(from=project.rootProject.rootDir.absolutePath+"/publishing.gradle")
-}
 
-dependencies {
-    compile("com.mojang:brigadier:1.0.17")
-    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-    compile(group = "org.apache.commons", name = "commons-lang3", version = "3.5")
-// https://mvnrepository.com/artifact/com.google.guava/guava
-    compile("com.google.guava:guava:21.0")
-    testCompile("junit", "junit", "4.12")
+    group = "io.github.cottonmc"
+
+
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            setUrl("https://libraries.minecraft.net")
+        }
+        maven {
+            setUrl("http://server.bbkr.space:8081/artifactory/libs-release")
+        }
+        maven {
+            setUrl("https://libraries.minecraft.net")
+        }
+    }
+    
+    dependencies{
+        testCompile("org.junit.jupiter:junit-jupiter-api:5.5.2")
+
+        testCompile("org.junit.platform:junit-platform-commons:1.5.2")
+        testCompile("org.junit.platform:junit-platform-engine:1.5.2")
+        testCompile("org.mockito:mockito-junit-jupiter:3.0.0") {
+            exclude(group=("org.junit.jupiter"))
+        }
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.2")
+    }
+
+
+    configure<JavaPluginConvention> {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+    }
+
 }
 
 configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
-
 }
 

@@ -2,8 +2,6 @@ package io.github.cottonmc.functionapi.tools;
 
 import com.mojang.brigadier.CommandDispatcher;
 import io.github.cottonmc.functionapi.api.content.StaticCommandRegistry;
-import io.github.cottonmc.functionapi.commands.IncludeCommand;
-import io.github.cottonmc.functionapi.commands.PrintCommand;
 import io.github.cottonmc.functionapi.tools.commands.EntityAttributeCommand;
 import io.github.cottonmc.functionapi.tools.commands.ItemSettingsCommand;
 import io.github.cottonmc.functionapi.tools.commands.RegistrationCommand;
@@ -17,7 +15,5 @@ public class CommandRegistry implements StaticCommandRegistry {
         ItemSettingsCommand.register(dispatcher);
         EntityAttributeCommand.register(dispatcher);
         RegistrationCommand.register(dispatcher);
-        PrintCommand.register((CommandDispatcher) dispatcher);
-        IncludeCommand.register((CommandDispatcher) dispatcher);
     }
 }

@@ -6,6 +6,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.cottonmc.functionapi.api.content.CommandFileSource;
 import io.github.cottonmc.functionapi.api.content.StaticCommandRegistry;
 import io.github.cottonmc.functionapi.api.script.FunctionAPIIdentifier;
+import io.github.cottonmc.functionapi.commands.IncludeCommand;
+import io.github.cottonmc.functionapi.commands.PrintCommand;
 import io.github.cottonmc.functionapi.util.MissingResourceException;
 
 import java.util.*;
@@ -29,6 +31,10 @@ public class StaticCommandExecutor {
 
 
         commandDispatcher = new CommandDispatcher<>();
+
+
+        PrintCommand.register((CommandDispatcher) commandDispatcher);
+        IncludeCommand.register(commandDispatcher);
         ServiceLoader.load(StaticCommandRegistry.class).iterator().forEachRemaining(staticCommandRegistry -> staticCommandRegistry.register(commandDispatcher));
     }
 
