@@ -1,7 +1,7 @@
 package io.github.cottonmc.functionapi.script;
 
 import io.github.cottonmc.functionapi.api.script.CommandRunner;
-import io.github.cottonmc.functionapi.api.script.FunctionAPIIdentifier;
+import io.github.cottonmc.functionapi.api.FunctionAPIIdentifier;
 import io.github.cottonmc.functionapi.api.script.ScriptedObject;
 import io.github.cottonmc.functionapi.util.FunctionAPIIdentifierImpl;
 
@@ -44,7 +44,7 @@ public abstract class FunctionManager<T,S> {
     protected abstract CommandRunner<T,S> getCommandRunner(FunctionAPIIdentifier functionAPIIdentifier);
 
     public static FunctionAPIIdentifier createID(ScriptedObject target, String eventName) {
-        return new FunctionAPIIdentifierImpl(target.getID().getNamespace(), target.getEventType() + "/" + target.getID().getPath() + "/" + eventName);
+        return new FunctionAPIIdentifierImpl(target.getEventID().getNamespace(), target.getEventType() + "/" + target.getEventID().getPath() + "/" + eventName);
     }
 
 

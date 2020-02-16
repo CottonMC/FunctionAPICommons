@@ -1,7 +1,7 @@
 package io.github.cottonmc.functionapi.script;
 
 
-import io.github.cottonmc.functionapi.api.script.FunctionAPIIdentifier;
+import io.github.cottonmc.functionapi.api.FunctionAPIIdentifier;
 import io.github.cottonmc.functionapi.api.script.ScriptedObject;
 
 import java.util.HashMap;

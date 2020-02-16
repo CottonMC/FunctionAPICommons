@@ -10,7 +10,7 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import io.github.cottonmc.functionapi.api.commands.CommandWithTwoArguments;
 import io.github.cottonmc.functionapi.api.commands.CommandWithArgument;
 import io.github.cottonmc.functionapi.api.content.enums.Direction;
-import io.github.cottonmc.functionapi.api.script.FunctionAPIIdentifier;
+import io.github.cottonmc.functionapi.api.FunctionAPIIdentifier;
 import io.github.cottonmc.functionapi.commands.arguments.FunctionAPIIdentifierArgumentType;
 
 /**
@@ -118,7 +118,7 @@ public abstract class InventoryCommandTemplate<S, POS, E, I> {
 
         for (Direction value : Direction.values()) {
             sourceBlock = sourceBlock.then(LiteralArgumentBuilder.<S>literal(value.name().toLowerCase())
-                    .then(RequiredArgumentBuilder.<S, FunctionAPIIdentifier>argument("eventName", FunctionAPIIdentifierArgumentType.identifier())
+                    .then(RequiredArgumentBuilder.<S, FunctionAPIIdentifier>argument("eventName", FunctionAPIIdentifierArgumentType.Companion.identifier())
                             //.suggests(EventCommand.SUGGESTION_PROVIDER)
                             .executes(context -> command.execute(context, value)))
                     .executes(context -> command.execute(context, value))
@@ -142,7 +142,7 @@ public abstract class InventoryCommandTemplate<S, POS, E, I> {
     private ArgumentBuilder<S, LiteralArgumentBuilder<S>> buildSourceEntityUseArgument(Command<S> command) {
         return LiteralArgumentBuilder.<S>literal("entity")
                 .then(RequiredArgumentBuilder.<S, E>argument("sourceEntity", getEntityArgumentType())
-                        .then(RequiredArgumentBuilder.<S, FunctionAPIIdentifier>argument("eventName", FunctionAPIIdentifierArgumentType.identifier())
+                        .then(RequiredArgumentBuilder.<S, FunctionAPIIdentifier>argument("eventName", FunctionAPIIdentifierArgumentType.Companion.identifier())
                                 //.suggests(EventCommand.SUGGESTION_PROVIDER)
                                 .executes(command))
                         .executes(command));

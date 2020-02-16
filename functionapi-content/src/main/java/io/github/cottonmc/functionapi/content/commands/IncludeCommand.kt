@@ -1,0 +1,55 @@
+package io.github.cottonmc.functionapi.content.commands
+
+import com.mojang.brigadier.CommandDispatcher
+import com.mojang.brigadier.Message
+import com.mojang.brigadier.builder.LiteralArgumentBuilder
+import com.mojang.brigadier.builder.RequiredArgumentBuilder
+import com.mojang.brigadier.context.CommandContext
+import com.mojang.brigadier.exceptions.CommandExceptionType
+import com.mojang.brigadier.exceptions.CommandSyntaxException
+import io.github.cottonmc.functionapi.api.FunctionAPIIdentifier
+import io.github.cottonmc.functionapi.api.content.CommandExecutor
+import io.github.cottonmc.functionapi.api.content.CommandRegistrator
+import io.github.cottonmc.functionapi.api.content.registration.Include
+import io.github.cottonmc.functionapi.commands.arguments.FunctionAPIIdentifierArgumentType
+import io.github.cottonmc.functionapi.util.MissingResourceException
+import java.util.*
+
+class IncludeCommand : CommandRegistrator {
+    private val includes = LinkedList<Include>();
+
+    fun addInclude(include:Include){
+        includes.add(include)
+    }
+
+    override fun register(commandDispatcher: CommandDispatcher<Map<String, Any>>) {
+        commandDispatcher.register(LiteralArgumentBuilder.literal<Map<String, Any>>("include")
+                .then(RequiredArgumentBuilder.argument<Map<String, Any>, FunctionAPIIdentifier>("id", FunctionAPIIdentifierArgumentType.identifier())
+                        .executes { context: CommandContext<Map<String, Any>> ->
+                            val functionAPIIdentifier = context.getArgument("id", FunctionAPIIdentifier::class.java)
+                            try {
+                                var included = false;
+                                for (include in includes) {
+                                    if(include.matches(functionAPIIdentifier)){
+                                        include.include(context.source,functionAPIIdentifier)
+                                        included = true
+                                        break
+                                    }
+                                }
+                                if(!included)
+                                    throw CommandSyntaxException(InvalidInclude.instance) {"No include directives could match this id!"}
+                            } catch (e: MissingResourceException) {
+                                throw CommandSyntaxException(InvalidInclude.instance) { "Static resource $functionAPIIdentifier is missing!" }
+
+                            }
+                            1
+                        }
+                ))
+    }
+
+    private class InvalidInclude:CommandExceptionType{
+        companion object{
+            val instance = InvalidInclude()
+        }
+    }
+}

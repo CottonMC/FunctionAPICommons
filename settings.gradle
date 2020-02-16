@@ -1,7 +1,18 @@
-rootProject.name = 'functionapi-common'
-include 'functionapi-blocks'
-include 'functionapi-tools'
-include 'functionapi-api'
-include 'functionapi-scripting'
-include 'functionapi-content'
+pluginManagement{
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        jcenter()
+     maven {
+            setUrl("http://server.bbkr.space:8081/artifactory/libs-release")
+        }
 
+    }
+}
+
+rootProject.name = 'functionapi-common'
+include 'functionapi-api'
+include 'functionapi-content'
+include 'functionapi-blocks'
+include 'functionapi-items'
+include 'functionapi-scripting'

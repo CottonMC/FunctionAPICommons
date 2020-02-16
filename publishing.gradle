@@ -52,7 +52,7 @@ artifactory {
                 password = artifactoryPassword
             }
             defaults {
-                publications('maven')
+                //publications('maven')
 
                 publishArtifacts = true
                 publishPom = true
