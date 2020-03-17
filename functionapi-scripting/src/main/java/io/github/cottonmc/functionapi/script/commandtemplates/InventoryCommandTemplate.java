@@ -9,7 +9,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import io.github.cottonmc.functionapi.api.commands.CommandWithTwoArguments;
 import io.github.cottonmc.functionapi.api.commands.CommandWithArgument;
-import io.github.cottonmc.functionapi.api.content.enums.Direction;
+import io.github.cottonmc.functionapi.api.content.block.enums.Direction;
 import io.github.cottonmc.functionapi.api.FunctionAPIIdentifier;
 import io.github.cottonmc.functionapi.commands.arguments.FunctionAPIIdentifierArgumentType;
 

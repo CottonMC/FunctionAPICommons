@@ -7,7 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.github.cottonmc.functionapi.api.FunctionAPIIdentifier;
 import io.github.cottonmc.functionapi.commands.arguments.FunctionAPIIdentifierArgumentType;
-import io.github.cottonmc.functionapi.util.FunctionAPIIdentifierImpl;
+import io.github.cottonmc.functionapi.util.impl.FunctionAPIIdentifierImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

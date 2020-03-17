@@ -2,14 +2,14 @@ package io.github.cottonmc.functionapi.content.template
 
 import io.github.cottonmc.functionapi.api.FunctionAPIIdentifier
 import io.github.cottonmc.functionapi.api.content.registration.RegistrationContainer
-import io.github.cottonmc.functionapi.util.PermanentHashmap
+import io.github.cottonmc.functionapi.util.impl.PermanentHashmap
 import java.util.*
 
 class RegistrationTemplate: RegistrationContainer {
 
     private val identifiers = LinkedList<FunctionAPIIdentifier>()
     private val postfixes = LinkedList<String>()
-    private val variants = PermanentHashmap<Int,MutableList<String>>()
+    private val variants = PermanentHashmap<Int, MutableList<String>>()
 
 
     override fun setID(identifier: FunctionAPIIdentifier) {

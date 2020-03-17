@@ -2,10 +2,12 @@ package io.github.cottonmc.functionapi.util
 
 import com.mojang.brigadier.CommandDispatcher
 import io.github.cottonmc.functionapi.content.StaticCommandExecutor
-import io.github.cottonmc.functionapi.content.documentation.ContentCommandDocumentationGenerator
-import io.github.cottonmc.functionapi.util.datacommand.ArgumentSetter
-import io.github.cottonmc.functionapi.util.datacommand.Context
-import io.github.cottonmc.functionapi.util.datacommand.Name
+import io.github.cottonmc.functionapi.util.documentation.ContentCommandDocumentationGenerator
+import io.github.cottonmc.functionapi.util.commandbuilder.annotation.ArgumentSetter
+import io.github.cottonmc.functionapi.util.commandbuilder.annotation.Context
+import io.github.cottonmc.functionapi.util.commandbuilder.DataClassToCommand
+import io.github.cottonmc.functionapi.util.commandbuilder.annotation.Name
+import io.github.cottonmc.functionapi.util.impl.PermanentHashmap
 import org.junit.jupiter.api.BeforeEach
 
 import org.junit.jupiter.api.Assertions.*
@@ -22,8 +24,6 @@ internal class DataClassToCommandTest {
     @BeforeEach
     fun setUp() {
         dispatcher = CommandDispatcher()
-
-
     }
 
     @ParameterizedTest(name = "{index} converting {0} to command")
@@ -40,7 +40,7 @@ internal class DataClassToCommandTest {
         DataClassToCommand.registerBackedCommand(createInstance, dispatcher)
         val writer = StringWriter()
 
-        ContentCommandDocumentationGenerator().generate(dispatcher, writer)
+        ContentCommandDocumentationGenerator(writer).generate(dispatcher)
         val toString = writer.buffer.toString()
         assertEquals(createInstance.toString(), toString.split("\n", limit = 2)[1].trim())
     }

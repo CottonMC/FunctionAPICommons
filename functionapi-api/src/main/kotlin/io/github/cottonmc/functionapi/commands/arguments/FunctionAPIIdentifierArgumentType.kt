@@ -6,10 +6,10 @@ import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.exceptions.CommandSyntaxException
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
 import io.github.cottonmc.functionapi.api.FunctionAPIIdentifier
-import io.github.cottonmc.functionapi.util.FunctionAPIIdentifierImpl
-import java.util.*
+import io.github.cottonmc.functionapi.util.impl.FunctionAPIIdentifierImpl
 
 class FunctionAPIIdentifierArgumentType : ArgumentType<FunctionAPIIdentifier> {
+
     @Throws(CommandSyntaxException::class)
     override fun parse(reader: StringReader): FunctionAPIIdentifier {
         val int_1 = reader.cursor

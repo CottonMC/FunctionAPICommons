@@ -17,25 +17,13 @@ publishing {
     publications {
         maven(MavenPublication) {
             from components.java
-
             artifacts = [
                     artifact(tasks.jar),
                     artifact(tasks.sourcesJar)
             ]
         }
     }
-    /* Supply an ext block in private.gradle like so:
-       ext { mavenSnapshotDir="file:///some_local_directory_path" }
-     * and then just run "./gradlew publish" to save the artifacts to the specified directory, in a way that they can be
-     * served by apache or your favorite httpd and behave like a maven repo. Complete with verification hashes.
-     */
-    repositories {
-        if (rootProject.ext.has("localMavenUrl")) {
-            maven {
-                url = rootProject.ext.localMavenUrl
-            }
-        }
-    }
+
 }
 
 artifactory {
@@ -43,7 +31,7 @@ artifactory {
         contextUrl = 'http://server.bbkr.space:8081/artifactory/'
         publish {
             repository {
-                if (version.contains("SNAPSHOT")) {
+                if (project.version.contains("SNAPSHOT")) {
                     repoKey = "libs-snapshot"
                 } else {
                     repoKey = "libs-release"
@@ -52,7 +40,7 @@ artifactory {
                 password = artifactoryPassword
             }
             defaults {
-                //publications('maven')
+                publications('maven')
 
                 publishArtifacts = true
                 publishPom = true

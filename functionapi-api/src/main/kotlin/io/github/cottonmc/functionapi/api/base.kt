@@ -1,6 +1,6 @@
 package io.github.cottonmc.functionapi.api
 
-import io.github.cottonmc.functionapi.api.content.ItemTemplate
+import io.github.cottonmc.functionapi.api.content.item.ItemTemplate
 
 /**
  * Simple interfaces used to create new behaviours.

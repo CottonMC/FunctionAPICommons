@@ -1,9 +1,9 @@
 package io.github.cottonmc.functionapi.api.content.registration
 
 import io.github.cottonmc.functionapi.api.FunctionAPIIdentifier
-import io.github.cottonmc.functionapi.util.datacommand.ArgumentSetter
-import io.github.cottonmc.functionapi.util.datacommand.Context
-import io.github.cottonmc.functionapi.util.datacommand.Name
+import io.github.cottonmc.functionapi.util.commandbuilder.annotation.ArgumentSetter
+import io.github.cottonmc.functionapi.util.commandbuilder.annotation.Context
+import io.github.cottonmc.functionapi.util.commandbuilder.annotation.Name
 
 @Name("register")
 @Context("registration")

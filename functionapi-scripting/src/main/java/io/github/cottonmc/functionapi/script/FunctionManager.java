@@ -3,7 +3,7 @@ package io.github.cottonmc.functionapi.script;
 import io.github.cottonmc.functionapi.api.script.CommandRunner;
 import io.github.cottonmc.functionapi.api.FunctionAPIIdentifier;
 import io.github.cottonmc.functionapi.api.script.ScriptedObject;
-import io.github.cottonmc.functionapi.util.FunctionAPIIdentifierImpl;
+import io.github.cottonmc.functionapi.util.impl.FunctionAPIIdentifierImpl;
 
 /**
  * Handles an event

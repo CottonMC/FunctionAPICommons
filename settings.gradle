@@ -13,6 +13,4 @@ pluginManagement{
 rootProject.name = 'functionapi-common'
 include 'functionapi-api'
 include 'functionapi-content'
-include 'functionapi-blocks'
-include 'functionapi-items'
 include 'functionapi-scripting'

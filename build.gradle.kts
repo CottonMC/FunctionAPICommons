@@ -2,7 +2,7 @@
 plugins {
     java
     idea
-    id("com.jfrog.artifactory") version "4.9.0" apply false
+    id("com.jfrog.artifactory") version "4.13.0" apply false
     kotlin("jvm") version "1.3.61"
 }
 
@@ -10,13 +10,11 @@ plugins {
 group = "io.github.cottonmc"
 version = "1.0"
 
-
-allprojects{
+subprojects{
     apply(plugin="java")
     apply(plugin="idea")
     apply(plugin="maven-publish")
     apply(plugin="com.jfrog.artifactory")
-    apply(from=project.rootProject.rootDir.absolutePath+"/publishing.gradle")
 
     group = "io.github.cottonmc"
 

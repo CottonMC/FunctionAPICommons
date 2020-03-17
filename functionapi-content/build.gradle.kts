@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "io.github.cottonmc"
-version = "1.1-SNAPSHOT"
+version = "1.4-SNAPSHOT"
 
 
 repositories {
@@ -43,6 +43,8 @@ test.useJUnitPlatform()
 
 
 dependencies {
+    implementation("com.mojang:brigadier:1.0.17")
+
     compile(project(":functionapi-api"))
     testCompile("junit", "junit", "4.12")
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
@@ -60,7 +62,11 @@ dependencies {
     }
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.2")
     testCompile("org.junit.jupiter:junit-jupiter-params:5.4.2")
+    implementation("com.google.guava:guava:21.0")
+
 }
 configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
 }
+
+apply(from=project.rootProject.rootDir.absolutePath+"/publishing.gradle")

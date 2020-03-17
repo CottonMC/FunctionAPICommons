@@ -7,7 +7,7 @@ import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.CommandSyntaxException
 import io.github.cottonmc.functionapi.api.FunctionAPIIdentifier
 import io.github.cottonmc.functionapi.commands.arguments.FunctionAPIIdentifierArgumentType.Companion.identifier
-import io.github.cottonmc.functionapi.util.FunctionAPIIdentifierImpl
+import io.github.cottonmc.functionapi.util.impl.FunctionAPIIdentifierImpl
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.function.Executable
 

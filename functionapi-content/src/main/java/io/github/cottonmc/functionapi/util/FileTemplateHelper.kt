@@ -1,6 +1,7 @@
 package io.github.cottonmc.functionapi.util
 
 import io.github.cottonmc.functionapi.api.FunctionAPIIdentifier
+import io.github.cottonmc.functionapi.util.impl.FunctionAPIIdentifierImpl
 import java.io.File
 import java.io.FileNotFoundException
 import java.util.*

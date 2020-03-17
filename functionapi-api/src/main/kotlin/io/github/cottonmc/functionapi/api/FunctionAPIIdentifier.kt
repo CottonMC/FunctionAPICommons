@@ -1,5 +1,8 @@
 package io.github.cottonmc.functionapi.api
 
+import io.github.cottonmc.functionapi.util.commandbuilder.annotation.ArgumentFormat
+
+@ArgumentFormat("namespace:path/separated/by/slashes")
 interface FunctionAPIIdentifier {
     val namespace: String
     val path: String

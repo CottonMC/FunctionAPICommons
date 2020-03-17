@@ -5,8 +5,7 @@ plugins{
     kotlin("jvm")
 }
 
-version = "1.1-SNAPSHOT"
-
+version = "1.4-SNAPSHOT"
 
 
 configure<JavaPluginConvention> {
@@ -31,12 +30,15 @@ test.useJUnitPlatform()
 
 
 dependencies {
-    compile("com.mojang:brigadier:1.0.17")
+    implementation("com.mojang:brigadier:1.0.17")
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-    compile(group = "org.apache.commons", name = "commons-lang3", version = "3.5")
+    implementation(group = "org.apache.commons", name = "commons-lang3", version = "3.5")
 // https://mvnrepository.com/artifact/com.google.guava/guava
-    compile("com.google.guava:guava:21.0")
-    compile(kotlin("stdlib-jdk8"))
-
+    implementation("com.google.guava:guava:21.0")
+    implementation(kotlin("stdlib-jdk8"))
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation(group= "com.google.code.gson", name= "gson", version= "2.8.0")
 }
+
+apply(from=project.rootProject.rootDir.absolutePath+"/publishing.gradle")
 

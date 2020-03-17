@@ -13,8 +13,12 @@ import io.github.cottonmc.functionapi.api.content.CommandRegistrator
 import io.github.cottonmc.functionapi.api.content.registration.Include
 import io.github.cottonmc.functionapi.commands.arguments.FunctionAPIIdentifierArgumentType
 import io.github.cottonmc.functionapi.util.MissingResourceException
+import io.github.cottonmc.functionapi.util.commandbuilder.annotation.Description
+import io.github.cottonmc.functionapi.util.commandbuilder.annotation.Name
 import java.util.*
 
+@Name("include")
+@Description("Includes other files into the script. For other mccontent files it's the same as the 'function' command")
 class IncludeCommand : CommandRegistrator {
     private val includes = LinkedList<Include>();
 
