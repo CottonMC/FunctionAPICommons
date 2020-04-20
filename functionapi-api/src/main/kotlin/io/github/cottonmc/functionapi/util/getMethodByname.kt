@@ -1,6 +1,6 @@
 package io.github.cottonmc.functionapi.util
 
-import io.github.cottonmc.functionapi.util.commandbuilder.annotation.Name
+import io.github.cottonmc.functionapi.util.annotation.Name
 import java.lang.reflect.Method
 import java.util.*
 

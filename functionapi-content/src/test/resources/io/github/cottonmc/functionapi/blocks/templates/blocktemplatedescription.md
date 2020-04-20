@@ -14,6 +14,36 @@ create a new custom state based on a set of words
 `blocksettings addtocustomstate <the name of the state we create or modify> <the new value we add to the state>`
 
 
+The block will act like the selected base, and those states will be added to it by default.
+
+
+`blocksettings block_type directional`
+
+
+
+`blocksettings block_type door`
+
+
+
+`blocksettings block_type fence`
+
+
+
+`blocksettings block_type normal`
+
+
+
+`blocksettings block_type stairs`
+
+
+
+`blocksettings block_type trapdoor`
+
+
+
+`blocksettings block_type wall`
+
+
 
 `blocksettings canspawnmobs <when set to false, it will disable mobspawning on this block>`
 
@@ -35,12 +65,6 @@ Compatible with the random tick event of function api!
 
 
 `blocksettings hardness <The higher the number, the harder it is to break the block>`
-
-
-when set to true, the block will use all of the states of a stair block, and will connect with all other existing stairs
-
-
-`blocksettings isastairblock <arg0>`
 
 
 

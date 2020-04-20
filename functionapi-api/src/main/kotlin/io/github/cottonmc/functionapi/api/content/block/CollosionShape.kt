@@ -3,6 +3,7 @@ package io.github.cottonmc.functionapi.api.content.block
 import io.github.cottonmc.functionapi.api.content.Vector3f
 
 interface CollosionShape {
+   var matchingStates:List<BlockState<*>>
    var parent:String
    var elements:List<ShapeElement>
 }

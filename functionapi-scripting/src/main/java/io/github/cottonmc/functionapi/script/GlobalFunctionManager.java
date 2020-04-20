@@ -8,9 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class GlobalFunctionManager<T,S> {
+public abstract class GlobalFunctionManager<T, S> {
 
-    private Map<FunctionAPIIdentifier, FunctionManager<T,S>> functionManagerMap;
+    private Map<FunctionAPIIdentifier, FunctionManager<T, S>> functionManagerMap;
 
     private boolean disabled = false;
 
@@ -21,7 +21,7 @@ public abstract class GlobalFunctionManager<T,S> {
     /**
      * Adds a new event manager to the system.
      */
-    public void addManager(FunctionManager<T,S> functionManager) {
+    public void addManager(FunctionManager<T, S> functionManager) {
         FunctionAPIIdentifier eventManagerID = functionManager.getID();
         functionManagerMap.put(eventManagerID, functionManager);
         functionManager.markDirty();
@@ -30,14 +30,23 @@ public abstract class GlobalFunctionManager<T,S> {
         }
     }
 
-    public FunctionManager<T,S> createEvent(ScriptedObject target, String name) {
+    public FunctionManager<T, S> createEvent(ScriptedObject target, String name) {
         return addIfMissing(getNewManager(target, name));
     }
 
-    protected abstract FunctionManager<T,S> getNewManager(FunctionAPIIdentifier name);
-    protected abstract FunctionManager<T,S> getNewManager(ScriptedObject target, String name);
+    public FunctionManager<T, S> createEvent(FunctionAPIIdentifier name) {
+        return addIfMissing(getNewManager(name));
+    }
 
-    public FunctionManager<T,S> getManager(FunctionAPIIdentifier functionAPIIdentifier) {
+
+    protected abstract FunctionManager<T, S> getNewManager(FunctionAPIIdentifier name);
+
+    protected abstract FunctionManager<T, S> getNewManager(ScriptedObject target, String name);
+
+    public FunctionManager<T, S> getManager(FunctionAPIIdentifier functionAPIIdentifier) {
+        if (!functionManagerMap.containsKey(functionAPIIdentifier)) {
+            createEvent(functionAPIIdentifier);
+        }
         return functionManagerMap.get(functionAPIIdentifier);
     }
 
@@ -46,7 +55,7 @@ public abstract class GlobalFunctionManager<T,S> {
     }
 
     public boolean enableEvent(FunctionAPIIdentifier functionAPIIdentifier) {
-        FunctionManager<T,S> eventManager = functionManagerMap.get(functionAPIIdentifier);
+        FunctionManager<T, S> eventManager = functionManagerMap.get(functionAPIIdentifier);
         if (eventManager == null)
             return false;
 
@@ -55,7 +64,7 @@ public abstract class GlobalFunctionManager<T,S> {
     }
 
     public boolean disableEvent(FunctionAPIIdentifier functionAPIIdentifier) {
-        FunctionManager<T,S> eventManager = functionManagerMap.get(functionAPIIdentifier);
+        FunctionManager<T, S> eventManager = functionManagerMap.get(functionAPIIdentifier);
         if (eventManager == null)
             return false;
 
@@ -85,7 +94,7 @@ public abstract class GlobalFunctionManager<T,S> {
         return functionManagerMap.containsKey(eventID);
     }
 
-    public FunctionManager<T,S> addIfMissing(FunctionManager<T,S> eventManager) {
+    public FunctionManager<T, S> addIfMissing(FunctionManager<T, S> eventManager) {
         if (!containsEvent(eventManager.getID())) {
             addManager(eventManager);
             return eventManager;
@@ -93,15 +102,45 @@ public abstract class GlobalFunctionManager<T,S> {
         return functionManagerMap.get(eventManager.getID());
     }
 
+    /**
+     * Run this event with this target
+     * Create it if it's missing.
+     * */
     public boolean executeEvent(ScriptedObject target, String name, T source) {
-        FunctionManager<T,S> event = createEvent(target, name);
+        FunctionManager<T, S> event = createEvent(target, name);
         event.fire(source);
 
         return event.hasEvents();
     }
 
+
+    /**
+     * Run this event with by this identifier
+     * Create it if it's missing.
+     * */
+    public boolean executeEvent(FunctionAPIIdentifier identifier, T source) {
+        FunctionManager<T, S> event = createEvent(identifier);
+        event.fire(source);
+
+        return event.hasEvents();
+    }
+
+    /**
+     * Run this event with this target, while blocking the main loop.
+     * Create it if it's missing.
+     * */
     public T executeEventBlocking(ScriptedObject target, String name, T source) {
         createEvent(target, name).fireBlocking(source);
+        return source;
+    }
+
+
+    /**
+     * Run this event with by this identifier, while blocking the main loop.
+     * Create it if it's missing.
+     * */
+    public T executeEventBlocking(FunctionAPIIdentifier identifier, T source) {
+        createEvent(identifier).fireBlocking(source);
         return source;
     }
 

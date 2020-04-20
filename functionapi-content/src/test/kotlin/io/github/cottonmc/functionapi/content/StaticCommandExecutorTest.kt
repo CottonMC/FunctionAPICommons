@@ -2,10 +2,11 @@ package io.github.cottonmc.functionapi.content
 
 import io.github.cottonmc.functionapi.api.FunctionAPIIdentifier
 import io.github.cottonmc.functionapi.api.content.FileSource
+import io.github.cottonmc.functionapi.api.content.CommandData
 import io.github.cottonmc.functionapi.content.commands.PrintCommand
-import io.github.cottonmc.functionapi.util.commandbuilder.annotation.ArgumentSetter
-import io.github.cottonmc.functionapi.util.commandbuilder.annotation.Description
-import io.github.cottonmc.functionapi.util.commandbuilder.annotation.Name
+import io.github.cottonmc.functionapi.util.annotation.ArgumentSetter
+import io.github.cottonmc.functionapi.util.annotation.Description
+import io.github.cottonmc.functionapi.util.annotation.Name
 import io.github.cottonmc.functionapi.util.impl.FunctionAPIIdentifierImpl
 import junit.framework.Assert.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -37,12 +38,28 @@ internal class StaticCommandExecutorTest {
     }
 
     @Test
+    fun `execute with an include`(){
+        var message = ""
+
+        instance.register(PrintCommand(Consumer{ message = it}))
+
+        instance.register(TestSource(mapOf(
+                FunctionAPIIdentifierImpl("test","test.mccontent") to "print test",
+                FunctionAPIIdentifierImpl("test","test1.mccontent") to "include test:test.mccontent"
+        )))
+
+        instance.execute(FunctionAPIIdentifierImpl("test","test1.mccontent"), mapOf())
+
+        assertEquals("test",message)
+    }
+
+    @Test
     fun getIDs() {
     }
 
     @Name("test")
     @Description("Test command description")
-    interface testCommandBase {
+    interface testCommandBase : CommandData {
         var name: String
             @Name("argumentname", valueName = "name", defaultValue = "name") @ArgumentSetter set
 
@@ -53,7 +70,11 @@ internal class StaticCommandExecutorTest {
 
     }
 
-    class TestCommand(override var name: String="name", override var descriptions: String="value", override var descriptions2: String="value") : testCommandBase
+    class TestCommand(override var name: String="name", override var descriptions: String="value", override var descriptions2: String="value") : testCommandBase {
+        override fun createNew(): Any {
+            return TestCommand()
+        }
+    }
 
     internal class TestSource(override val files: Map<FunctionAPIIdentifier, String>) : FileSource {}
 

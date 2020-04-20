@@ -5,7 +5,7 @@ plugins{
 
 group= "io.github.cottonmc"
 
-version = "1.0"
+version = "1.1"
 
 dependencies {
     implementation(project(":functionapi-api"))

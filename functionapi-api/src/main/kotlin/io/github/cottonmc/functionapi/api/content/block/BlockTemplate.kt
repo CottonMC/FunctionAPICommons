@@ -2,12 +2,11 @@ package io.github.cottonmc.functionapi.api.content.block
 
 import io.github.cottonmc.functionapi.api.content.block.enums.BlockRenderLayer
 import io.github.cottonmc.functionapi.api.content.block.enums.BlockSoundGroup
+import io.github.cottonmc.functionapi.api.content.block.enums.BlockType
 import io.github.cottonmc.functionapi.api.content.block.enums.Material
 import io.github.cottonmc.functionapi.api.content.item.enums.Tools
-import io.github.cottonmc.functionapi.util.commandbuilder.annotation.ArgumentSetter
-import io.github.cottonmc.functionapi.util.commandbuilder.annotation.Context
-import io.github.cottonmc.functionapi.util.commandbuilder.annotation.Description
-import io.github.cottonmc.functionapi.util.commandbuilder.annotation.Name
+import io.github.cottonmc.functionapi.api.content.CommandData
+import io.github.cottonmc.functionapi.util.annotation.*
 import java.lang.UnsupportedOperationException
 
 @Name("blocksettings")
@@ -15,78 +14,143 @@ import java.lang.UnsupportedOperationException
 @Description("""
 Sets the default values for this block.
 """)
-interface BlockTemplate {
-    var hardness:Float
-    @ArgumentSetter
-    @Name("hardness", valueName = "The higher the number, the harder it is to break the block",defaultValue = "1")
-    set
-    var resistance:Float
-        @ArgumentSetter
-        @Name("resistance", valueName = "The higher the number, the more resistant it is to explosions",defaultValue = "0")
-        set
+interface BlockTemplate : CommandData {
 
-    var hasItem:Boolean
-        @ArgumentSetter
-        @Name("createitem", valueName = "when set to false, the block will have no item form. Useful for technical blocks",defaultValue = "true")
-        set
+    @Name("entity_name", displayName = "Entity Name", valueName = "Full name of the class that should be the block entity of this block.")
+    var entityName: String
+        @Name("entity_name", displayName = "Entity Name", valueName = "Full name of the class that should be the block entity of this block.")
+        @ArgumentSetter set
+        @ArgumentGetter get
 
-    var ticksRandomly:Boolean
-    @Description(
-            """when set to true, the block will receive random ticks.
+
+    @Name("block_name", displayName = "Block Name", valueName = "Full name of the class that should be used to create the block.")
+    var blockName: String
+        @Name("block_name", displayName = "Block Name", valueName = "Full name of the class that should be used to create the block.")
+        @ArgumentSetter set
+        @ArgumentGetter get
+
+
+    @Name("hardness", valueName = "The higher the number, the harder it is to break the block", defaultValue = "1")
+    var hardness: Float
+        @Name("hardness", valueName = "The higher the number, the harder it is to break the block", defaultValue = "1")
+        @ArgumentSetter set
+        @ArgumentGetter get
+
+    @Name("resistance", valueName = "The higher the number, the more resistant it is to explosions", defaultValue = "0")
+    var resistance: Float
+        @ArgumentSetter set
+        @ArgumentGetter get
+
+
+    @Name("create item", displayName = "Add an item", valueName = "when set to false, the block will have no item form. Useful for technical blocks", defaultValue = "true")
+    var hasItem: Boolean
+        @Name("resistance", valueName = "The higher the number, the more resistant it is to explosions", defaultValue = "0")
+        @ArgumentSetter set
+        @ArgumentGetter get
+
+
+    var ticksRandomly: Boolean
+
+        @Description(
+                """when set to true, the block will receive random ticks.
 Compatible with the random tick event of function api!""")
-        @ArgumentSetter @Name("enablerandomtick",defaultValue = "true") set
+        @Name("enablerandomtick", displayName = "Enable Random ticks", defaultValue = "true")
+        @ArgumentSetter set
+        @ArgumentGetter get
 
-    @ArgumentSetter
+
+    @ArgumentSetter(false)
     @Description("""create a new state based on a range of numbers""")
     @Name("newnumberstate")
     @Throws(UnsupportedOperationException::class)
     fun createIntProperty(@Name("state name") name: String, @Name("max value (counts up from 0)") value: Int)
 
-    @ArgumentSetter
+    @ArgumentSetter(false)
     @Description("""create a new state based on a true/false value""")
-    @Name("newbooleanstate")
+    @Name("new_booleanstate")
     @Throws(UnsupportedOperationException::class)
     fun createBooleanProperty(@Name("state name") name: String)
 
-    @ArgumentSetter
+    @ArgumentSetter(false)
     @Description("""create a new custom state based on a set of words""")
-    @Name("addtocustomstate")
+    @Name("add_to_customstate")
     @Throws(UnsupportedOperationException::class)
-    fun addToStringProperty(@Name("the name of the state we create or modify") name: String, @Name("the new value we add to the state")value: String)
+    fun addToStringProperty(@Name("the name of the state we create or modify") name: String, @Name("the new value we add to the state") value: String)
 
-    var canSpawnMobs:Boolean
-        @ArgumentSetter @Name("canspawnmobs", valueName = "when set to false, it will disable mobspawning on this block",defaultValue = "true") set
+    @ArgumentGetter
+    fun getPropertyCommands(): Array<String>
 
-    fun getStates():Array<BlockState<*>>
+    var canSpawnMobs: Boolean
+        @Name("can spawnmobs", valueName = "when set to false, it will disable mobspawning on this block", defaultValue = "true")
+        @ArgumentSetter set
+        @ArgumentGetter get
 
-    var isStairs:Boolean
-        @Description("when set to true, the block will use all of the states of a stair block, and will connect with all other existing stairs")@ArgumentSetter @Name("isastairblock",defaultValue = "true") set
+
+    fun getStates(): Array<BlockState<*>>
+
+    var baseType: BlockType
+        @Description("The block will act like the selected base, and those states will be added to it by default.")
+        @Name("can spawnmobs", valueName = "when set to false, it will disable mobspawning on this block", defaultValue = "true")
+        @ArgumentSetter set
+        @ArgumentGetter get
+
 
     var material: Material
-        @ArgumentSetter
-        @Name("material")
+
         @Description("Sets the material of the block.")
-        set
+        @Name("material")
+        @ArgumentSetter set
+        @ArgumentGetter get
 
     var lightLevel: Int
-        @ArgumentSetter @Name("lightlevel", valueName = "Anything higher than 0 will make the block emit light, anything higher than 15 will be set to 15.",defaultValue = "0") set
+        @Name("can spawnmobs", valueName = "when set to false, it will disable mobspawning on this block", defaultValue = "true")
+        @ArgumentSetter set
+        @ArgumentGetter get
+
     var isCollidable: Boolean
-        @ArgumentSetter @Name("enablecollosions", valueName = "if set to false, the block will not collide with entities, so you can walk through it.",defaultValue = "true") set
+        @Name("can spawnmobs", valueName = "when set to false, it will disable mobspawning on this block", defaultValue = "true")
+        @ArgumentSetter set
+        @ArgumentGetter get
+
     var soundGroup: BlockSoundGroup
-        @ArgumentSetter @Name("soundgroup") @Description("The type of the sound that the block will make when stepped on, or broken") set
+        @Description("The type of the sound that the block will make when stepped on, or broken")
+        @Name("sound group")
+        @ArgumentSetter set
+        @ArgumentGetter get
+
+
     var tool: Tools
-        @ArgumentSetter @Name("propertool") @Description("the proper tool to break this block. On fabric, use the included tool tags instead.")set
+        @Description("the proper tool to break this block. On fabric, use the included tool tags instead.")
+        @Name("proper tool")
+        @ArgumentSetter set
+        @ArgumentGetter get
+
     var miningLevel: Int
-        @ArgumentSetter @Name("mining_level",valueName = "sets what tool level should be able to mine this block. (0 is wood, 4 is diamond)",defaultValue = "0") set
+        @Name("mining level", valueName = "sets what tool level should be able to mine this block. (0 is wood, 4 is diamond)", defaultValue = "0")
+        @ArgumentSetter set
+        @ArgumentGetter get
+
+
     var isAir: Boolean
-        @ArgumentSetter @Name("makeair",valueName = "if set to true, than the block will be considered an air block.",defaultValue = "false") set
+        @Name("make air", valueName = "if set to true, than the block will be considered an air block.", defaultValue = "false")
+        @ArgumentSetter set
+        @ArgumentGetter get
+
+
     var isInvisible: Boolean
-        @ArgumentSetter @Name("makeinvisible",valueName = "setting it to true makes the block invisible, like a barrier block.",defaultValue = "false") set
+        @Name("make invisible", valueName = "setting it to true makes the block invisible, like a barrier block.", defaultValue = "false")
+        @ArgumentSetter set
+        @ArgumentGetter get
 
     var isWaterlogged: Boolean
-        @ArgumentSetter @Name("makewaterlogged",valueName = "setting it to true makes the block waterlogged. Adding a boolean state with the name 'waterlogged' does not have the same effect!",defaultValue = "false") set
+        @Name("make waterlogged", valueName = "setting it to true makes the block waterlogged. Adding a boolean state with the name 'waterlogged' does not have the same effect!", defaultValue = "false")
+        @ArgumentSetter set
+        @ArgumentGetter get
 
+    var renderLayer: BlockRenderLayer
+        @Name("setrenderlayer", defaultValue = "solid")
+        @Description("This value controls the way the block is rendered (leaves are cutout mipped). Does not exist above 1.14.")
+        @ArgumentSetter set
+        @ArgumentGetter get
 
-    var renderLayer:BlockRenderLayer
-      @Description("This value controls the way the block is rendered (leaves are cutout mipped). Does not exist above 1.14.")  @ArgumentSetter @Name("setrenderlayer",defaultValue = "solid") set
 }

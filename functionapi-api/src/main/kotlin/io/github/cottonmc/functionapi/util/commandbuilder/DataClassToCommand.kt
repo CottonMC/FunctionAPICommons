@@ -1,36 +1,28 @@
 package io.github.cottonmc.functionapi.util.commandbuilder
 
 import com.mojang.brigadier.CommandDispatcher
-import com.mojang.brigadier.arguments.ArgumentType
-import com.mojang.brigadier.arguments.FloatArgumentType
-import com.mojang.brigadier.arguments.IntegerArgumentType
-import com.mojang.brigadier.arguments.StringArgumentType
-import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.builder.RequiredArgumentBuilder
-import io.github.cottonmc.functionapi.api.FunctionAPIIdentifier
-import io.github.cottonmc.functionapi.commands.arguments.EnumArgumentType
-import io.github.cottonmc.functionapi.commands.arguments.FunctionAPIIdentifierArgumentType
-import io.github.cottonmc.functionapi.util.commandbuilder.annotation.ArgumentSetter
-import io.github.cottonmc.functionapi.util.commandbuilder.annotation.Context
-import io.github.cottonmc.functionapi.util.commandbuilder.annotation.Name
+import io.github.cottonmc.functionapi.api.content.CommandData
+import io.github.cottonmc.functionapi.util.annotation.ArgumentSetter
+import io.github.cottonmc.functionapi.util.annotation.Context
+import io.github.cottonmc.functionapi.util.annotation.Name
 import io.github.cottonmc.functionapi.util.getAnnotations
 import java.lang.reflect.Method
 import java.lang.reflect.Parameter
-import java.util.*
 
-private typealias SetterFunction = (context: Map<String, Any>, arguments: Array<Any>) -> Int
+private typealias SetterFunction = (context: MutableMap<String, Any>, arguments: Array<Any>) -> Int
 
 /**
  * convert a data class into a data filling command
  * */
 object DataClassToCommand {
 
-    fun getContext(name: String, context: Map<String, Any>, target: Any): Any {
-        return context.getOrDefault(name, target)
+    fun getContext(name: String, context: MutableMap<String, Any>, target: CommandData): Any {
+        return context.getOrDefault(name, target.createNew())
     }
 
-    fun registerBackedCommand(target: Any, dispatcher: CommandDispatcher<Map<String, Any>>) {
+    fun registerBackedCommand(target: CommandData, dispatcher: CommandDispatcher<MutableMap<String, Any>>) {
         val nameAnnotation = getAnnotations(target.javaClass, Name::class.java)
         val contextAnnotation = getAnnotations(target.javaClass, Context::class.java)
         val name = if (nameAnnotation.isPresent) {
@@ -47,9 +39,9 @@ object DataClassToCommand {
         registerBackedCommand(target, dispatcher, name, context)
     }
 
-    fun registerBackedCommand(target: Any, dispatcher: CommandDispatcher<Map<String, Any>>, name: String, contextName: String) {
+    fun registerBackedCommand(target: CommandData, dispatcher: CommandDispatcher<MutableMap<String, Any>>, name: String, contextName: String) {
 
-        val commandNode = LiteralArgumentBuilder.literal<Map<String, Any>>(name)
+        val commandNode = LiteralArgumentBuilder.literal<MutableMap<String, Any>>(name)
 
         val methods = target::class.java.methods
 
@@ -65,7 +57,7 @@ object DataClassToCommand {
     class InvalidStateException(clas: Class<out Any>, method: Method) : Exception("Invalid data class: ${clas.canonicalName}, method ${method.name} is invalid!")
 
 
-    private fun buildMethod(commandNode: LiteralArgumentBuilder<Map<String, Any>>, method: Method, contextName: String, target: Any) {
+    private fun buildMethod(commandNode: LiteralArgumentBuilder<MutableMap<String, Any>>, method: Method, contextName: String, target: CommandData) {
 
         val optionalName = getAnnotations(method, Name::class.java)
 
@@ -82,14 +74,14 @@ object DataClassToCommand {
 
         when (arrayOfParameters.size) {
             1 -> {
-                commandNode.then(fieldForOneArgument(method, fieldName, parameter) { context: Map<String, Any>, argument: Array<Any> ->
-                    method.invoke(getContext(contextName, context, target), argument[0])
+                commandNode.then(fieldForOneArgument(method, fieldName, parameter) { context: MutableMap<String, Any>, argument: Array<Any> ->
+                    method.invoke(getContext(contextName, context, target), *argument)
                     1
                 })
             }
             2 -> {
-                commandNode.then(fieldForTwoArgument(fieldName, parameter, arrayOfParameters[1]) { context: Map<String, Any>, argument: Array<Any> ->
-                    method.invoke(getContext(contextName, context, target), argument[0], argument[1])
+                commandNode.then(fieldForTwoArgument(fieldName, parameter, arrayOfParameters[1]) { context: MutableMap<String, Any>, argument: Array<Any> ->
+                    method.invoke(getContext(contextName, context, target), *argument)
                     1
                 })
             }
@@ -99,8 +91,8 @@ object DataClassToCommand {
         }
     }
 
-    private fun fieldForOneArgument(method: Method, fieldName: String, parameter: Parameter, setter: SetterFunction): LiteralArgumentBuilder<Map<String, Any>> {
-        val fieldLiteral: LiteralArgumentBuilder<Map<String, Any>> = LiteralArgumentBuilder.literal<Map<String, Any>>(fieldName)
+    private fun fieldForOneArgument(method: Method, fieldName: String, parameter: Parameter, setter: SetterFunction): LiteralArgumentBuilder<MutableMap<String, Any>> {
+        val fieldLiteral: LiteralArgumentBuilder<MutableMap<String, Any>> = LiteralArgumentBuilder.literal<MutableMap<String, Any>>(fieldName)
 
         val optionalName = getAnnotations(method, Name::class.java)
 
@@ -128,17 +120,16 @@ object DataClassToCommand {
             for (enumConstant in enumConstants) {
                 val enumName = enumConstant.toString().toLowerCase()
 
-                val enumArgument: LiteralArgumentBuilder<Map<String, Any>> = LiteralArgumentBuilder.literal<Map<String, Any>>(enumName)
+                val enumArgument: LiteralArgumentBuilder<MutableMap<String, Any>> = LiteralArgumentBuilder.literal<MutableMap<String, Any>>(enumName)
 
                 enumArgument
                         .executes { context ->
-                            val argument = context.getArgument(paramName, parameter.type)
-                            setter.invoke(context.source, arrayOf(argument))
+                            setter.invoke(context.source, arrayOf(enumConstant))
                         }
                 fieldLiteral.then(enumArgument)
             }
         }else{
-            fieldLiteral.then(RequiredArgumentBuilder.argument<Map<String, Any>, Any>(paramName, classToArgument(parameter.type).get())
+            fieldLiteral.then(RequiredArgumentBuilder.argument<MutableMap<String, Any>, Any>(paramName, classToArgument(parameter.type).get())
                     .executes { context ->
                         val argument = context.getArgument(paramName, parameter.type)
 
@@ -149,7 +140,7 @@ object DataClassToCommand {
         return fieldLiteral
     }
 
-    private fun fieldForTwoArgument(fieldName: String, parameter: Parameter, parameter1: Parameter, setter: SetterFunction): LiteralArgumentBuilder<Map<String, Any>> {
+    private fun fieldForTwoArgument(fieldName: String, parameter: Parameter, parameter1: Parameter, setter: SetterFunction): LiteralArgumentBuilder<MutableMap<String, Any>> {
         val optionalParameterName = getAnnotations(parameter1, Name::class.java)
 
         val parameterName =
@@ -160,7 +151,7 @@ object DataClassToCommand {
                 }
         val optionalArgumentType = classToArgument(parameter1.type)
 
-        val fieldLiteral: LiteralArgumentBuilder<Map<String, Any>> = LiteralArgumentBuilder.literal<Map<String, Any>>(fieldName)
+        val fieldLiteral: LiteralArgumentBuilder<MutableMap<String, Any>> = LiteralArgumentBuilder.literal<MutableMap<String, Any>>(fieldName)
 
         if (parameter.type.isEnum) {
             val enumConstants = parameter.type.enumConstants
@@ -168,9 +159,9 @@ object DataClassToCommand {
             for (enumConstant in enumConstants) {
                 val enumName = enumConstant.toString().toLowerCase()
 
-                val enumArgument: LiteralArgumentBuilder<Map<String, Any>> = LiteralArgumentBuilder.literal<Map<String, Any>>(enumName)
+                val enumArgument: LiteralArgumentBuilder<MutableMap<String, Any>> = LiteralArgumentBuilder.literal<MutableMap<String, Any>>(enumName)
 
-                enumArgument.then(RequiredArgumentBuilder.argument<Map<String, Any>, Any>(parameterName, optionalArgumentType.get())
+                enumArgument.then(RequiredArgumentBuilder.argument<MutableMap<String, Any>, Any>(parameterName, optionalArgumentType.get())
                         .executes { context ->
                             val argument = context.getArgument(parameterName, parameter1.type)
                             setter.invoke(context.source, arrayOf(enumConstant, argument))
@@ -192,8 +183,8 @@ object DataClassToCommand {
             if(optionalArgumentType0.isPresent) {
                 val argumentType0 = optionalArgumentType0.get();
                 fieldLiteral
-                        .then(RequiredArgumentBuilder.argument<Map<String, Any>, Any>(parameterName0, argumentType0)
-                                .then(RequiredArgumentBuilder.argument<Map<String, Any>, Any>(parameterName, optionalArgumentType.get())
+                        .then(RequiredArgumentBuilder.argument<MutableMap<String, Any>, Any>(parameterName0, argumentType0)
+                                .then(RequiredArgumentBuilder.argument<MutableMap<String, Any>, Any>(parameterName, optionalArgumentType.get())
                                         .executes { context ->
                                             val argument = context.getArgument(parameterName0, parameter.type)
                                             val argument1 = context.getArgument(parameterName, parameter1.type)

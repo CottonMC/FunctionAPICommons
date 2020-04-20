@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "io.github.cottonmc"
-version = "1.4-SNAPSHOT"
+version = "1.4"
 
 
 repositories {
@@ -63,6 +63,9 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.2")
     testCompile("org.junit.jupiter:junit-jupiter-params:5.4.2")
     implementation("com.google.guava:guava:21.0")
+
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation(group= "com.google.code.gson", name= "gson", version= "2.8.0")
 
 }
 configure<JavaPluginConvention> {

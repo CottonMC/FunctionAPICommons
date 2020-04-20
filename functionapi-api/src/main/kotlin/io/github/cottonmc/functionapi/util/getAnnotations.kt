@@ -4,6 +4,12 @@ import java.lang.reflect.Method
 import java.lang.reflect.Parameter
 import java.util.*
 
+
+fun <T : Annotation> getAnnotations(obj:Any, annotation: Class<T>): Optional<T> {
+    return getAnnotations(obj::class.java,annotation)
+}
+
+
 /**
  * Travel all parent classes to get the annotation
  * */

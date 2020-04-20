@@ -5,6 +5,6 @@ import io.github.cottonmc.functionapi.util.MissingResourceException
 
 interface Include {
     @Throws(MissingResourceException::class)
-    fun include( context:Map<String, Any>,item:FunctionAPIIdentifier)
+    fun include( context:MutableMap<String, Any>,item:FunctionAPIIdentifier)
     fun matches(item: FunctionAPIIdentifier):Boolean
 }

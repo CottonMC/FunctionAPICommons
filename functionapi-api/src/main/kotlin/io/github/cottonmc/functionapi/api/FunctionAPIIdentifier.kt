@@ -1,6 +1,6 @@
 package io.github.cottonmc.functionapi.api
 
-import io.github.cottonmc.functionapi.util.commandbuilder.annotation.ArgumentFormat
+import io.github.cottonmc.functionapi.util.annotation.ArgumentFormat
 
 @ArgumentFormat("namespace:path/separated/by/slashes")
 interface FunctionAPIIdentifier {

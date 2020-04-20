@@ -1,12 +1,13 @@
 package io.github.cottonmc.functionapi.util
 
 import com.mojang.brigadier.CommandDispatcher
+import io.github.cottonmc.functionapi.api.content.CommandData
 import io.github.cottonmc.functionapi.content.StaticCommandExecutor
 import io.github.cottonmc.functionapi.util.documentation.ContentCommandDocumentationGenerator
-import io.github.cottonmc.functionapi.util.commandbuilder.annotation.ArgumentSetter
-import io.github.cottonmc.functionapi.util.commandbuilder.annotation.Context
+import io.github.cottonmc.functionapi.util.annotation.ArgumentSetter
+import io.github.cottonmc.functionapi.util.annotation.Context
 import io.github.cottonmc.functionapi.util.commandbuilder.DataClassToCommand
-import io.github.cottonmc.functionapi.util.commandbuilder.annotation.Name
+import io.github.cottonmc.functionapi.util.annotation.Name
 import io.github.cottonmc.functionapi.util.impl.PermanentHashmap
 import org.junit.jupiter.api.BeforeEach
 
@@ -33,9 +34,10 @@ internal class DataClassToCommandTest {
         TestData3::class,
         TestDataExtraField::class,
         TestData4::class,
+        TestData31::class,
         AnnotatedParent::class
     ])
-    fun `generates the expected commands`(testData: Class<Any>) {
+    fun `generates the expected commands`(testData: Class<CommandData>) {
         val createInstance = testData.newInstance()
         DataClassToCommand.registerBackedCommand(createInstance, dispatcher)
         val writer = StringWriter()
@@ -57,16 +59,20 @@ internal class DataClassToCommandTest {
 
         assertAll(
                 { assertNotNull(context["test"]) },
-                { assertEquals("1", data.test) }
+                { assertEquals("1", (context["test"] as TestData4).test) }
         )
     }
 
     @Name("testcommand")
     @Context("test")
-    internal class TestData {
+    internal class TestData : CommandData {
         @Name("name")
         @ArgumentSetter
         fun setTest(@Name("value") int: Int) {
+        }
+
+        override fun createNew(): Any {
+            return javaClass.newInstance()
         }
 
         override fun toString(): String {
@@ -76,10 +82,14 @@ internal class DataClassToCommandTest {
 
     @Name("testcommand")
     @Context("test")
-    internal class TestDataExtraField() {
+    internal class TestDataExtraField(): CommandData {
         @Name("name")
         @ArgumentSetter
         fun setTest(@Name("value") int: Int) {
+        }
+
+        override fun createNew(): Any {
+            return javaClass.newInstance()
         }
 
         fun ignored() {}
@@ -91,7 +101,12 @@ internal class DataClassToCommandTest {
 
     @Name("testcommand2arguments")
     @Context("test")
-    internal class TestData2 {
+    internal class TestData2 : CommandData {
+
+        override fun createNew(): Any {
+            return javaClass.newInstance()
+        }
+
         @Name("name")
         @ArgumentSetter
         fun setTest(@Name("key") int: Int, @Name("value") value: String) {
@@ -104,7 +119,11 @@ internal class DataClassToCommandTest {
 
     @Name("testcommand2arguments_enum")
     @Context("test")
-    internal class TestData3 {
+    internal class TestData3 : CommandData {
+
+        override fun createNew(): Any {
+            return javaClass.newInstance()
+        }
 
         internal enum class Key {
             key1, key2
@@ -120,9 +139,36 @@ internal class DataClassToCommandTest {
         }
     }
 
+
+    @Name("testcommand1arguments_enum")
+    @Context("test")
+    internal class TestData31 : CommandData {
+
+        override fun createNew(): Any {
+            return javaClass.newInstance()
+        }
+
+        internal enum class Key {
+            key1, key2
+        }
+
+        @Name("name")
+        @ArgumentSetter
+        fun setTest(@Name("key") key: Key) {
+        }
+
+        override fun toString(): String {
+            return "testcommand1arguments_enum name key1\ntestcommand1arguments_enum name key2"
+        }
+    }
+
     @Name("testcommand_field")
     @Context("test")
-    internal class TestData4 {
+    internal class TestData4 : CommandData {
+
+        override fun createNew(): Any {
+            return javaClass.newInstance()
+        }
 
         var test: String = ""
             @Name("field", valueName = "value") @ArgumentSetter set
@@ -134,13 +180,18 @@ internal class DataClassToCommandTest {
 
     @Name("test")
     @Context("test")
-    internal interface ParentWithAnnotations {
+    internal interface ParentWithAnnotations : CommandData {
+
         var test: String
             @Name("field", valueName = "value") @ArgumentSetter set
     }
 
 
     internal class AnnotatedParent : ParentWithAnnotations {
+        override fun createNew(): Any {
+            return javaClass.newInstance()
+        }
+
         override var test: String = ""
 
         override fun toString(): String {

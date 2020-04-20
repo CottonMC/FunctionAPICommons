@@ -5,7 +5,7 @@ plugins{
     kotlin("jvm")
 }
 
-version = "1.4-SNAPSHOT"
+version = "1.4"
 
 
 configure<JavaPluginConvention> {

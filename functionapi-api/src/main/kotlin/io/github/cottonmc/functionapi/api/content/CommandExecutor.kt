@@ -10,9 +10,9 @@ interface CommandExecutor {
     fun register(command: CommandRegistrator)
     fun register(include: Include)
     fun register(fileSource: FileSource)
-    val commandDispatcher: CommandDispatcher<Map<String, Any>>
+    val commandDispatcher: CommandDispatcher<MutableMap<String, Any>>
     @Throws(MissingResourceException::class, CommandSyntaxException::class)
-    fun execute(identifier: FunctionAPIIdentifier, source: Map<String, Any>)
+    fun execute(identifier: FunctionAPIIdentifier, source: MutableMap<String, Any>)
 
     val iDs: Set<FunctionAPIIdentifier>
 }
